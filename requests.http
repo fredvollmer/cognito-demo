@@ -1,0 +1,29 @@
+@username = newsomebody4
+
+POST https://localhost:5001/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "{{username}}",
+    "email": "travis.lobert@wellsky.com",
+    "firstName": "{{username}}",
+    "lastName": "else",
+    "terriotyId": "kc",
+    "role": "user"
+}
+
+###
+
+GET https://localhost:5001/user/{{username}} HTTP/1.1
+
+###
+
+POST https://localhost:5001/user/{{username}}/enable HTTP/1.1
+
+###
+
+POST https://localhost:5001/user/{{username}}/disable HTTP/1.1
+
+###
+
+DELETE https://localhost:5001/user/{{username}} HTTP/1.1
