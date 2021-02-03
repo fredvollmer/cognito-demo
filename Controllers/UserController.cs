@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace cognito_dotnet_angular.Controllers
@@ -14,11 +15,6 @@ namespace cognito_dotnet_angular.Controllers
     public class UserController : ControllerBase
     {
         private static AmazonCognitoIdentityProviderClient _cognitoClient = new AmazonCognitoIdentityProviderClient();
-
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<UserController> _logger;
 
@@ -39,6 +35,7 @@ namespace cognito_dotnet_angular.Controllers
                 UserAttributes = new List<AttributeType>
                 {
                     new() {Name = "email", Value = req.Email},
+                    new() {Name = "email_verified", Value = "true"},
                 }
             });
 
@@ -59,6 +56,7 @@ namespace cognito_dotnet_angular.Controllers
             return new User
             {
                 Id = source.Id,
+                Email = source.Email,
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 TerriotyId = source.TerriotyId,
@@ -66,15 +64,31 @@ namespace cognito_dotnet_angular.Controllers
                 IsEnabled = true,
             };
         }
-
+        
         [HttpGet]
-        [Route("{userId}")]
         //[Authorize]
-        public async Task<User> Get(String userId)
+        public async Task<ActionResult<List<User>>> List()
         {
             using (var db = new UserContext())
             {
-                return await db.Users.FindAsync(userId);
+                return await db.Users.ToListAsync();
+            }
+        }
+        
+        [HttpGet]
+        [Route("{userId}")]
+        //[Authorize]
+        public async Task<ActionResult<User>> Get(String userId)
+        {
+            using (var db = new UserContext())
+            {
+                User user = await db.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return user;
             }
         }
 
@@ -110,7 +124,6 @@ namespace cognito_dotnet_angular.Controllers
         //[Authorize]
         public async Task<IActionResult> Disable(String userId)
         {
-            // Task dbInsertTask;
             var cognitoTask = _cognitoClient.AdminDisableUserAsync(new AdminDisableUserRequest
             {
                 UserPoolId = "us-east-1_wi3kBOkom",
@@ -119,13 +132,15 @@ namespace cognito_dotnet_angular.Controllers
 
             _logger.LogInformation($"Disable {userId}");
 
-            // using (var db = new UserContext())
-            // {
-            //     db.Add(req);
-            //     dbInsertTask = db.SaveChangesAsync();
-            // }
+            Task dbInsertTask;
+            using (var db = new UserContext())
+            {
+                var user = await db.Users.FindAsync(userId);
+                user.IsEnabled = false;
+                dbInsertTask = db.SaveChangesAsync();
+            }
 
-            // await dbInsertTask;
+            await dbInsertTask;
             await cognitoTask;
 
             return NoContent();
