@@ -10,7 +10,7 @@ export function configureAuth(oidcConfigService: OidcConfigService) {
             postLoginRoute: '/fetch-data',
             // postLogoutRedirectUri: window.location.origin,
             forbiddenRoute: window.location.origin,
-            clientId: '30ra7bclouj3bffmmg7okkanon',
+            clientId: '2vmjrkudt1srocep4p3f7ug5c0',
             scope: 'openid profile email',
             responseType: 'code',
             //silentRenew: true,

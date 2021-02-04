@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Text.Json;
+using cognito_dotnet_angular.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,15 +42,22 @@ namespace cognito_dotnet_angular
                         // Get JsonWebKeySet from AWS
                         var json = new WebClient().DownloadString(parameters.ValidIssuer + "/.well-known/jwks.json");
                         // Serialize the result
-                        return JsonSerializer.Deserialize<JsonWebKeySet>(json).Keys;
+                        return JsonWebKeySet.Create(json).Keys;
                     },
                     ValidateIssuer = true,
                     ValidIssuer = $"https://cognito-idp.{Configuration["Authentication:Cognito:Region"]}.amazonaws.com/{Configuration["Authentication:Cognito:PoolId"]}",
                     ValidateLifetime = true,
                     LifetimeValidator = (before, expires, token, param) => expires > DateTime.UtcNow,
-                    ValidateAudience = true,
-                    ValidAudience = Configuration["Authentication:Cognito:ClientId"],
+                    ValidateAudience = false,
                 };
+            });
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", () =>
+                {
+                    
+                });
             });
             
             services.AddControllersWithViews();
@@ -84,7 +92,9 @@ namespace cognito_dotnet_angular
             app.UseRouting();
 
             app.UseAuthentication();
-
+            app.UseMiddleware<AddApplicationUser>();
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

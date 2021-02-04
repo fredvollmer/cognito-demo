@@ -6,18 +6,6 @@ import { Observable } from 'rxjs';
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
-export class HomeComponent  implements OnInit {
-  constructor(public oidcSecurityService: OidcSecurityService) {}
-
-  ngOnInit() {
-      this.oidcSecurityService.checkAuth().subscribe((auth) => console.log('is authenticated', auth));
-  }
-
-  login() {
-      this.oidcSecurityService.authorize();
-  }
-  
-  logout() {
-      this.oidcSecurityService.logoff();
-  }
+export class HomeComponent {
+  constructor() {}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace cognito_dotnet_angular.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private static AmazonCognitoIdentityProviderClient _cognitoClient = new AmazonCognitoIdentityProviderClient();
@@ -24,7 +26,7 @@ namespace cognito_dotnet_angular.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateUserRequest req)
         {
             var cognitoCreationTask = _cognitoClient.AdminCreateUserAsync(new AdminCreateUserRequest
