@@ -27,44 +27,41 @@ namespace cognito_dotnet_angular.Controllers
         //[Authorize]
         public async Task<IActionResult> Create(CreateUserRequest req)
         {
-            Task dbInsertTask;
             var cognitoCreationTask = _cognitoClient.AdminCreateUserAsync(new AdminCreateUserRequest
             {
                 UserPoolId = "us-east-1_wi3kBOkom",
                 Username = req.Id,
                 UserAttributes = new List<AttributeType>
                 {
-                    new() {Name = "email", Value = req.Email},
-                    new() {Name = "email_verified", Value = "true"},
+                    new() { Name = "email", Value = req.Email },
+                    new() { Name = "email_verified", Value = "true" },
                 }
             });
 
+            Task dbInsertTask;
             using (var db = new UserContext())
             {
-                db.Add<User>(map(req));
+                db.Add<User>(new User
+                {
+                    Id = req.Id,
+                    Email = req.Email,
+                    FirstName = req.FirstName,
+                    LastName = req.LastName,
+                    TerriotyId = req.TerriotyId,
+                    Role = req.Role,
+                    IsEnabled = true,
+                });
                 dbInsertTask = db.SaveChangesAsync();
             }
 
             await dbInsertTask;
             await cognitoCreationTask;
 
+            _logger.LogInformation($"Created {req.Id}");
+
             return Created(nameof(Get), new { userId = req.Id });
         }
 
-        private User map(CreateUserRequest source)
-        {
-            return new User
-            {
-                Id = source.Id,
-                Email = source.Email,
-                FirstName = source.FirstName,
-                LastName = source.LastName,
-                TerriotyId = source.TerriotyId,
-                Role = source.Role,
-                IsEnabled = true,
-            };
-        }
-        
         [HttpGet]
         //[Authorize]
         public async Task<ActionResult<List<User>>> List()
@@ -74,7 +71,7 @@ namespace cognito_dotnet_angular.Controllers
                 return await db.Users.ToListAsync();
             }
         }
-        
+
         [HttpGet]
         [Route("{userId}")]
         //[Authorize]
@@ -103,8 +100,6 @@ namespace cognito_dotnet_angular.Controllers
                 Username = userId,
             });
 
-            _logger.LogInformation($"Enable {userId}");
-
             Task dbInsertTask;
             using (var db = new UserContext())
             {
@@ -115,6 +110,8 @@ namespace cognito_dotnet_angular.Controllers
 
             await dbInsertTask;
             await cognitoTask;
+
+            _logger.LogInformation($"Enabled {userId}");
 
             return NoContent();
         }
@@ -130,8 +127,6 @@ namespace cognito_dotnet_angular.Controllers
                 Username = userId,
             });
 
-            _logger.LogInformation($"Disable {userId}");
-
             Task dbInsertTask;
             using (var db = new UserContext())
             {
@@ -143,6 +138,8 @@ namespace cognito_dotnet_angular.Controllers
             await dbInsertTask;
             await cognitoTask;
 
+            _logger.LogInformation($"Disabled {userId}");
+
             return NoContent();
         }
 
@@ -151,15 +148,13 @@ namespace cognito_dotnet_angular.Controllers
         //[Authorize]
         public async Task<IActionResult> Delete(String userId)
         {
-            // Task dbInsertTask;
             var cognitoTask = _cognitoClient.AdminDeleteUserAsync(new AdminDeleteUserRequest
             {
                 UserPoolId = "us-east-1_wi3kBOkom",
                 Username = userId,
             });
 
-            _logger.LogInformation($"Deleted {userId}");
-
+            // Task dbInsertTask;
             // using (var db = new UserContext())
             // {
             //     db.Add(req);
@@ -168,6 +163,8 @@ namespace cognito_dotnet_angular.Controllers
 
             // await dbInsertTask;
             await cognitoTask;
+
+            _logger.LogInformation($"Deleted {userId}");
 
             return NoContent();
         }
