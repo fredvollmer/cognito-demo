@@ -13,8 +13,8 @@ export function configureAuth(oidcConfigService: OidcConfigService) {
             clientId: '30ra7bclouj3bffmmg7okkanon',
             scope: 'openid profile email',
             responseType: 'code',
-            silentRenew: true,
-            useRefreshToken: true,
+            //silentRenew: true,
+            //useRefreshToken: true,
             logLevel: LogLevel.Debug,
         });
 }
