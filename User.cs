@@ -37,13 +37,16 @@ namespace cognito_dotnet_angular
             // return claims;
 
             return new List<Claim> {
-                new Claim(this.getClaimName(nameof(Id)), this.Id),
-                new Claim(this.getClaimName(nameof(Email)), this.Email != null ? this.Email:""),
-                new Claim(this.getClaimName(nameof(FirstName)), this.FirstName),
-                new Claim(this.getClaimName(nameof(LastName)), this.LastName),
-                new Claim(this.getClaimName(nameof(TerriotyId)), this.TerriotyId),
-                new Claim(this.getClaimName(nameof(Role)), this.Role),
-                new Claim(this.getClaimName(nameof(IsEnabled)), this.IsEnabled.ToString()),
+                new (this.getClaimName(nameof(Id)), this.Id),
+                new (this.getClaimName(nameof(Email)), this.Email != null ? this.Email:""),
+                new (this.getClaimName(nameof(FirstName)), this.FirstName),
+                new (this.getClaimName(nameof(LastName)), this.LastName),
+                new (this.getClaimName(nameof(TerriotyId)), this.TerriotyId),
+                new (this.getClaimName(nameof(IsEnabled)), this.IsEnabled.ToString()),
+                
+                // Role claim has a specific type that allows it to be used in statements such as 
+                //  [Authorize(Role = "admin")]
+                new Claim(ClaimTypes.Role, this.Role),
             };
         }
 
