@@ -54,7 +54,7 @@ namespace cognito_dotnet_angular
                 new Claim(ClaimTypes.Role, this.Role),
                 new Claim(getClaimName(nameof(Role)), this.Role),
             };
-        }
+        }   
 
         private string getClaimName(string name)
         {

@@ -8,8 +8,8 @@ using cognito_dotnet_angular;
 namespace cognito_dotnet_angular.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210203180051_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210205173701_InitialState")]
+    partial class InitialState
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,11 +28,14 @@ namespace cognito_dotnet_angular.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TerriotyId")
                         .HasColumnType("TEXT");

@@ -32,8 +32,8 @@ namespace cognito_dotnet_angular.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TerriotyId")
                         .HasColumnType("TEXT");
