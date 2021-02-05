@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 namespace cognito_dotnet_angular
@@ -29,17 +27,6 @@ namespace cognito_dotnet_angular
 
         public IEnumerable<Claim> ToClaims()
         {
-            // string jsonUser = JsonSerializer.Serialize(this);
-            // Dictionary<string, string> userFields = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonUser);
-
-            // var claims = new List<Claim>();
-            // foreach (var name in userFields)
-            // {
-            //     claims.Add(new Claim($"applicationuser:{name.Key}", name.Value));
-            // }
-
-            // return claims;
-
             return new List<Claim> {
                 new (this.getClaimName(nameof(Id)), this.Id),
                 new (this.getClaimName(nameof(Email)), this.Email != null ? this.Email:""),
