@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 namespace cognito_dotnet_angular
@@ -15,11 +15,6 @@ namespace cognito_dotnet_angular
 
     public class User
     {
-        private string getClaimName(string name)
-        {
-            return $"applicationuser:{name}";
-        }
-
         public string Id { get; set; }
         public string Email { get; set; }
         public string FirstName { get; set; }
@@ -30,15 +25,31 @@ namespace cognito_dotnet_angular
 
         public IEnumerable<Claim> ToClaims()
         {
-            var claims = new List<Claim>();
-            claims.Add(new Claim(this.getClaimName(nameof(Id)), this.Id));
-            claims.Add(new Claim(this.getClaimName(nameof(Email)), this.Email));
-            claims.Add(new Claim(this.getClaimName(nameof(FirstName)), this.FirstName));
-            claims.Add(new Claim(this.getClaimName(nameof(LastName)), this.LastName));
-            claims.Add(new Claim(this.getClaimName(nameof(TerriotyId)), this.TerriotyId));
-            claims.Add(new Claim(this.getClaimName(nameof(Role)), this.Role));
-            claims.Add(new Claim(this.getClaimName(nameof(IsEnabled)), this.IsEnabled.ToString()));
-            return claims;
+            // string jsonUser = JsonSerializer.Serialize(this);
+            // Dictionary<string, string> userFields = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonUser);
+
+            // var claims = new List<Claim>();
+            // foreach (var name in userFields)
+            // {
+            //     claims.Add(new Claim($"applicationuser:{name.Key}", name.Value));
+            // }
+
+            // return claims;
+
+            return new List<Claim> {
+                new Claim(this.getClaimName(nameof(Id)), this.Id),
+                new Claim(this.getClaimName(nameof(Email)), this.Email != null ? this.Email:""),
+                new Claim(this.getClaimName(nameof(FirstName)), this.FirstName),
+                new Claim(this.getClaimName(nameof(LastName)), this.LastName),
+                new Claim(this.getClaimName(nameof(TerriotyId)), this.TerriotyId),
+                new Claim(this.getClaimName(nameof(Role)), this.Role),
+                new Claim(this.getClaimName(nameof(IsEnabled)), this.IsEnabled.ToString()),
+            };
+        }
+
+        private string getClaimName(string name)
+        {
+            return $"applicationuser:{name}";
         }
     }
 }
