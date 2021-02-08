@@ -16,7 +16,7 @@ namespace cognito_dotnet_angular.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private static AmazonCognitoIdentityProviderClient _cognitoClient = new AmazonCognitoIdentityProviderClient();
+        private static IAmazonCognitoIdentityProvider _cognitoClient = new AmazonCognitoIdentityProviderClient();
 
         private readonly ILogger<UserController> _logger;
 
