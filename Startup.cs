@@ -51,15 +51,15 @@ namespace cognito_dotnet_angular
                     ValidateAudience = false,
                 };
             });
-            
+
             // services.AddAuthorization(options =>
             // {
             //     options.AddPolicy("AdminOnly", () =>
             //     {
-                    
+
             //     });
             // });
-            
+
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -94,7 +94,7 @@ namespace cognito_dotnet_angular
             app.UseAuthentication();
             app.UseMiddleware<AddApplicationUser>();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -21,12 +21,12 @@ export function configureAuth(oidcConfigService: OidcConfigService) {
             logLevel: LogLevel.Debug,
 
         }, {
-          issuer: OAUTH_HOSTNAME,
-          jwksUri: `${OAUTH_HOSTNAME}/.well-known/jwks.json`,
-          authorizationEndpoint: `${IDP_HOSTNAME}/oauth2/authorize`,
-          tokenEndpoint: `${IDP_HOSTNAME}/oauth2/token`,
-          userinfoEndpoint: `${IDP_HOSTNAME}/oauth2/userInfo`,
-          endSessionEndpoint: `${IDP_HOSTNAME}/logout`,
+            issuer: OAUTH_HOSTNAME,
+            jwksUri: `${OAUTH_HOSTNAME}/.well-known/jwks.json`,
+            authorizationEndpoint: `${IDP_HOSTNAME}/oauth2/authorize`,
+            tokenEndpoint: `${IDP_HOSTNAME}/oauth2/token`,
+            userinfoEndpoint: `${IDP_HOSTNAME}/oauth2/userInfo`,
+            endSessionEndpoint: `${IDP_HOSTNAME}/logout`,
         });
 }
 
@@ -44,4 +44,4 @@ export function configureAuth(oidcConfigService: OidcConfigService) {
     exports: [AuthModule],
 })
 
-export class AuthConfigModule {}
+export class AuthConfigModule { }
