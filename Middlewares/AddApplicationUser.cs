@@ -23,7 +23,7 @@ namespace cognito_dotnet_angular.Middlewares
                 using (var db = new UserContext())
                 {
                     User user = await db.Users.FindAsync(usernameClaim.Value);
-                    context.User.AddIdentity(new ClaimsIdentity(UserClaimFactory.BuildClaims(user)));
+                    context.User.AddIdentity(new ClaimsIdentity(UserClaimMapper.BuildClaims(user)));
                 }
             }
             await next(context);

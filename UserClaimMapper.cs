@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace cognito_dotnet_angular
 {
-    public static class UserClaimFactory
+    public static class UserClaimMapper
     {
         public static User BuildUser(ClaimsPrincipal principal)
         {
