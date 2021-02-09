@@ -31,7 +31,8 @@ namespace cognito_dotnet_angular
 
         public static IEnumerable<Claim> BuildClaims(User user)
         {
-            return new List<Claim> {
+            return new List<Claim>
+            {
                 new Claim(User.ClaimType.Id, user.Id),
                 new Claim(User.ClaimType.Email, user.Email != null ? user.Email:""),
                 new Claim(User.ClaimType.FirstName, user.FirstName),
