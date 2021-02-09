@@ -144,31 +144,5 @@ namespace cognito_dotnet_angular.Controllers
 
             return NoContent();
         }
-
-        [HttpDelete]
-        [Route("{userId}")]
-        //[Authorize]
-        public async Task<IActionResult> Delete(String userId)
-        {
-            var cognitoTask = _cognitoClient.AdminDeleteUserAsync(new AdminDeleteUserRequest
-            {
-                UserPoolId = "us-east-1_wi3kBOkom",
-                Username = userId,
-            });
-
-            // Task dbInsertTask;
-            // using (var db = new UserContext())
-            // {
-            //     db.Add(req);
-            //     dbInsertTask = db.SaveChangesAsync();
-            // }
-
-            // await dbInsertTask;
-            await cognitoTask;
-
-            _logger.LogInformation($"Deleted {userId}");
-
-            return NoContent();
-        }
     }
 }
