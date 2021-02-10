@@ -7,7 +7,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   templateUrl: './fetch-data.component.html'
 })
 export class FetchDataComponent {
-  public users: User[];
+  private users: User[];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, private oidcSecurityService: OidcSecurityService) {
     http.get<User[]>(baseUrl + 'user', {
@@ -17,6 +17,10 @@ export class FetchDataComponent {
     }).subscribe(result => {
       this.users = result;
     }, error => console.error(error));
+  }
+
+  ngOnInit(): void {
+    //TODO: shoudn't the constructor logic really happen here?
   }
 }
 
