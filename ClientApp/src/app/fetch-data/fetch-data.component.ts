@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
@@ -6,21 +6,29 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   selector: 'app-fetch-data',
   templateUrl: './fetch-data.component.html'
 })
-export class FetchDataComponent {
-  private users: User[];
+export class FetchDataComponent implements OnInit {
+  public users: User[];
+  public currentUser: User;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, private oidcSecurityService: OidcSecurityService) {
-    http.get<User[]>(baseUrl + 'user', {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private oidcSecurityService: OidcSecurityService) {
+  }
+
+  ngOnInit(): void {
+    this.http.get<User[]>(this.baseUrl + 'user', {
       headers: {
         Authorization: `Bearer ${this.oidcSecurityService.getToken()}`,
       },
     }).subscribe(result => {
       this.users = result;
     }, error => console.error(error));
-  }
 
-  ngOnInit(): void {
-    //TODO: shoudn't the constructor logic really happen here?
+    this.http.get<User>(this.baseUrl + 'whoami', {
+      headers: {
+        Authorization: `Bearer ${this.oidcSecurityService.getToken()}`,
+      },
+    }).subscribe(result => {
+      this.currentUser = result;
+    });
   }
 }
 
